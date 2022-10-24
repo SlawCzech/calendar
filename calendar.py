@@ -1,11 +1,21 @@
+def sort_calendar(key):
+    def wrapper(fn):
+        def inner(*args, **kwargs):
+            return sorted(fn(*args, **kwargs), key=lambda element: element[key])
+
+        return inner
+
+    return wrapper
+
 
 def calendar():
     calendar_data = []
 
-    def inner(fn=None, **kwargs):
+    @sort_calendar(key='title')
+    def calendar_instance_(fn=None, **kwargs):
         return fn(calendar_data, **kwargs) if fn is not None else calendar_data
 
-    return inner
+    return calendar_instance_
 
 
 def get_event(calendar_data, event_name, start_date):
@@ -45,9 +55,9 @@ def update_event(calendar_data, event_name, start_date, updates):
 
 calendar_instance = calendar()
 
-calendar_instance(add_event, event={'title': "dupa", 'start_date': 1, 'type': 'event'})
-calendar_instance(add_event, event={'title': "dupa", 'start_date': 2, 'type': 'event'})
+calendar_instance(add_event, event={'title': "dupa", 'start_date': 666, 'type': 'event'})
+calendar_instance(add_event, event={'title': "dupa", 'start_date': 43, 'type': 'event'})
 calendar_instance(add_event, event={'title': 'elo', 'start_date': 3, 'type': 'meeting'})
-calendar_instance(update_event, event_name='dupa', start_date=1, updates={'type': 'meeting'})
+calendar_instance(update_event, event_name='dupa', start_date=666, updates={'type': 'meeting'})
 # print(calendar_instance(delete_event, event_name='dupa', start_date=2))
 print(calendar_instance())
